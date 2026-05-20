@@ -95,3 +95,7 @@ body {
 .sidebar-label {
   font-size: 13px !important;
 }
+/* Forcer taille texte colonne droite */
+.details-panel, .panel-content, .right-column, .content, .sidebar-content {
+  font-size: 14px !important;
+}

@@ -17,9 +17,10 @@ export const P = {
   green:       '#6A9A5A',
   terra:       '#C4623A',
   brick:       '#B85030',
-  textMain:    '#F0D4A0',
-  textDim:     '#8A6A40',
-  textFaint:   '#4A2E14',
+  textMain:  '#F5E6C0',
+  textDim:   '#C4A060',
+  textFaint: '#8A6A40',
+  sand:      '#F5E6C0',
   graticule:   'rgba(232,132,58,0.07)',
   sphere:      'rgba(232,132,58,0.25)',
 }

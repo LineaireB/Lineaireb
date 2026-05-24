@@ -33,19 +33,19 @@ export interface MapTooltipLayout {
   rectY: number
   labelLines: string[]
   labelY: number
-  periodeY: number
+  periodY: number
   episodeY: number
 }
 
 export function getCivTooltipLayout(
   label: string,
-  periode: string,
+  period: string,
   episode: string,
 ): MapTooltipLayout {
   const labelLines = wrapWords(label, 22)
   const contentWidth = Math.max(
     ...labelLines.map((line) => line.length * CHAR.label),
-    periode.length * CHAR.meta,
+    period.length * CHAR.meta,
     episode.length * CHAR.episode,
   )
   const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, Math.ceil(contentWidth + PAD_X * 2)))
@@ -60,7 +60,7 @@ export function getCivTooltipLayout(
     rectY,
     labelLines,
     labelY: rectY + PAD_X + 9,
-    periodeY: rectY + PAD_X + labelLines.length * LINE.label + 10,
+    periodY: rectY + PAD_X + labelLines.length * LINE.label + 10,
     episodeY: rectY + PAD_X + labelLines.length * LINE.label + LINE.meta + 10,
   }
 }

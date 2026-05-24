@@ -1,6 +1,6 @@
-import { CIVILISATIONS } from '@/data/civilisations'
+import { CIVILIZATIONS } from '@/data/civilizations'
 import { createProjection } from '@/lib/geo'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 import type { TagId } from '@/types/theme'
 import type { MapDimensions, MapTransform } from '@/types/map'
 
@@ -9,7 +9,7 @@ interface ConnectionLinesProps {
   transform: MapTransform
   selectedTheme: string | null
   relevantTags: TagId[]
-  isDiscovered: (civ: Civilisation) => boolean
+  isDiscovered: (civ: Civilization) => boolean
 }
 
 export default function ConnectionLines({
@@ -22,7 +22,7 @@ export default function ConnectionLines({
   if (!selectedTheme) return null
 
   const projection = createProjection(dims.w, dims.h)
-  const active = CIVILISATIONS.filter(
+  const active = CIVILIZATIONS.filter(
     (c) => relevantTags.some((t) => c.tags.includes(t)) && isDiscovered(c),
   )
 

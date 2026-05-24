@@ -8,15 +8,15 @@ export type GeoRegion =
   | 'ameriques'
   | null
 
-export interface Civilisation {
+export interface Civilization {
   id: string
   label: string
-  periode: string
+  period: string
   region: string
   geo: GeoRegion
   lng: number
   lat: number
   episode: string
   tags: TagId[]
-  resume: string
+  summary: string
 }

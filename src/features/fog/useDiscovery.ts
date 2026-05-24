@@ -1,13 +1,13 @@
 import { useCallback, useState } from 'react'
 import { clearDiscovered, loadDiscovered, saveDiscovered } from '@/lib/storage'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 
 interface UseDiscoveryResult {
   discovered: Set<string>
   revealAnim: Set<string>
   discoveredCount: number
-  isDiscovered: (civ: Civilisation) => boolean
-  discover: (civ: Civilisation) => void
+  isDiscovered: (civ: Civilization) => boolean
+  discover: (civ: Civilization) => void
   resetFog: () => void
 }
 
@@ -16,11 +16,11 @@ export function useDiscovery(fogMode: boolean): UseDiscoveryResult {
   const [revealAnim, setRevealAnim] = useState<Set<string>>(new Set())
 
   const isDiscovered = useCallback(
-    (civ: Civilisation) => !fogMode || discovered.has(civ.id),
+    (civ: Civilization) => !fogMode || discovered.has(civ.id),
     [fogMode, discovered],
   )
 
-  const discover = useCallback((civ: Civilisation) => {
+  const discover = useCallback((civ: Civilization) => {
     setDiscovered((prev) => {
       if (prev.has(civ.id)) return prev
       const next = new Set([...prev, civ.id])

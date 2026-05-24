@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { COMPARE_COLORS } from '@/data/palette'
-import { DIMENSIONS } from '@/data/comparaisons'
+import { DIMENSIONS } from '@/data/comparisons'
 import { getHybridCivs } from '@/lib/tags'
-import type { Civilisation } from '@/types/civilisation'
-import type { ComparisonData, SubsistanceTag } from '@/types/map'
+import type { Civilization } from '@/types/civilization'
+import type { ComparisonData, SubsistenceTag } from '@/types/map'
 
 const HYBRID_HIGHLIGHT_MS = 2200
 
 interface ComparePanelProps {
-  compareA: SubsistanceTag
-  compareB: SubsistanceTag
+  compareA: SubsistenceTag
+  compareB: SubsistenceTag
   dataA: ComparisonData
   dataB: ComparisonData
-  onSelectCiv: (civ: Civilisation) => void
+  onSelectCiv: (civ: Civilization) => void
   hybridsHighlightToken: number
 }
 
@@ -34,10 +34,13 @@ export default function ComparePanel({
     const section = hybridsRef.current
     section?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 
-    setHybridsHighlighted(true)
+    const frame = requestAnimationFrame(() => setHybridsHighlighted(true))
     const timer = window.setTimeout(() => setHybridsHighlighted(false), HYBRID_HIGHLIGHT_MS)
 
-    return () => window.clearTimeout(timer)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.clearTimeout(timer)
+    }
   }, [hybridsHighlightToken, hybridCivs.length])
 
   return (
@@ -78,7 +81,7 @@ export default function ComparePanel({
         >
           <div className="compare-panel__hybrids-title">Cas hybrides</div>
           <p className="compare-panel__hybrids-intro">
-            Civilisations qui combinent les deux modes de subsistance comparés.
+            Civilizations qui combinent les deux modes de subsistance comparés.
           </p>
           {hybridCivs.map((c) => (
             <button
@@ -88,7 +91,7 @@ export default function ComparePanel({
               onClick={() => onSelectCiv(c)}
             >
               {c.label}{' '}
-              <span className="compare-panel__hybrid-period">— {c.periode}</span>
+              <span className="compare-panel__hybrid-period">— {c.period}</span>
             </button>
           ))}
         </div>

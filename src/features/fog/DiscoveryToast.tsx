@@ -1,39 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { epColor } from '@/data/palette'
-import type { Civilisation } from '@/types/civilisation'
+import { useAnimatedPresence } from '@/hooks/useAnimatedPresence'
+import type { Civilization } from '@/types/civilization'
 
-const TOAST_ANIM_MS = 250
 const AUTO_DISMISS_MS = 3200
 
 interface DiscoveryToastProps {
-  civ: Civilisation | null
+  civ: Civilization | null
   onClose: () => void
 }
 
 export default function DiscoveryToast({ civ, onClose }: DiscoveryToastProps) {
-  const [visibleCiv, setVisibleCiv] = useState<Civilisation | null>(civ)
-  const [isClosing, setIsClosing] = useState(false)
-  const visibleCivRef = useRef(visibleCiv)
-  visibleCivRef.current = visibleCiv
-
-  const dismiss = useCallback(() => {
-    setIsClosing((closing) => {
-      if (closing) return closing
-      return true
-    })
-  }, [])
-
-  useEffect(() => {
-    if (civ) {
-      setVisibleCiv(civ)
-      setIsClosing(false)
-      return
-    }
-
-    if (visibleCivRef.current) {
-      setIsClosing(true)
-    }
-  }, [civ])
+  const { visible: visibleCiv, isClosing, dismiss } = useAnimatedPresence(civ, {
+    onAfterClose: onClose,
+  })
 
   useEffect(() => {
     if (!civ || isClosing) return
@@ -41,18 +21,6 @@ export default function DiscoveryToast({ civ, onClose }: DiscoveryToastProps) {
     const timer = window.setTimeout(dismiss, AUTO_DISMISS_MS)
     return () => window.clearTimeout(timer)
   }, [civ, isClosing, dismiss])
-
-  useEffect(() => {
-    if (!isClosing) return
-
-    const timer = window.setTimeout(() => {
-      setVisibleCiv(null)
-      setIsClosing(false)
-      onClose()
-    }, TOAST_ANIM_MS)
-
-    return () => window.clearTimeout(timer)
-  }, [isClosing, onClose])
 
   if (!visibleCiv) return null
 
@@ -79,7 +47,7 @@ export default function DiscoveryToast({ civ, onClose }: DiscoveryToastProps) {
         </div>
         <div className="discovery-toast__label">{visibleCiv.label}</div>
         <div className="discovery-toast__excerpt">
-          {visibleCiv.resume.slice(0, 120)}…
+          {visibleCiv.summary.slice(0, 120)}…
         </div>
       </div>
     </div>

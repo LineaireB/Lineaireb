@@ -7,25 +7,25 @@ import ZoomControls, { MapHint } from '@/features/map/ZoomControls'
 import { useContainerSize } from '@/hooks/useContainerSize'
 import { useMapZoom } from '@/hooks/useMapZoom'
 import { useWorldMap } from '@/hooks/useWorldMap'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 import type { TagId } from '@/types/theme'
 import { computeRegionTransform } from '@/lib/geo'
-import type { AppMode, RegionPreset, SubsistanceTag } from '@/types/map'
+import type { AppMode, RegionPreset, SubsistenceTag } from '@/types/map'
 
 interface MapViewProps {
   mode: AppMode
   selectedTheme: string | null
   relevantTags: TagId[]
-  selectedCiv: Civilisation | null
+  selectedCiv: Civilization | null
   hoveredCivId: string | null
-  compareA: SubsistanceTag
-  compareB: SubsistanceTag
+  compareA: SubsistenceTag
+  compareB: SubsistenceTag
   fogMode: boolean
   revealAnim: Set<string>
-  toast: Civilisation | null
+  toast: Civilization | null
   flyRegion: RegionPreset | null
-  isDiscovered: (civ: Civilisation) => boolean
-  onCivClick: (civ: Civilisation) => void
+  isDiscovered: (civ: Civilization) => boolean
+  onCivClick: (civ: Civilization) => void
   onCivHover: (id: string | null) => void
   onToastClose: () => void
   onMapBackgroundClick: () => void

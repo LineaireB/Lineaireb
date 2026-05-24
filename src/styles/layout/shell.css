@@ -1,0 +1,57 @@
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  color: var(--color-sand);
+  overflow: hidden;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+.app-body--compare {
+  flex-direction: column;
+}
+
+/* Backdrop overlays (mobile drawer / detail sheet) */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--color-overlay);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  animation: fadeIn 0.25s ease;
+}
+
+.app-backdrop--closing {
+  animation: backdropOut 0.25s ease forwards;
+  pointer-events: none;
+}
+
+.app-backdrop--detail {
+  z-index: 25;
+}
+
+@media (min-width: 900px) {
+  .app-backdrop--podcast-inline {
+    display: none;
+  }
+}
+@media (min-width: 900px) {
+  .app-backdrop {
+    display: none;
+  }
+
+  .app-body--compare {
+    flex-direction: row;
+  }
+}

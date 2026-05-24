@@ -1,15 +1,17 @@
 /**
  * D3 geo helpers: Natural Earth projection and preset region zoom transforms.
  */
-import * as d3 from 'd3'
+import { geoGraticule10, geoNaturalEarth1, geoPath } from 'd3-geo'
+import { zoomIdentity, type ZoomTransform } from 'd3-zoom'
+import type { GeoProjection } from 'd3-geo'
 import type { MapDimensions, MapTransform, RegionPreset } from '@/types/map'
 
-export function createProjection(width: number, height: number): d3.GeoProjection {
-  return d3.geoNaturalEarth1().fitSize([width, height], { type: 'Sphere' })
+export function createProjection(width: number, height: number): GeoProjection {
+  return geoNaturalEarth1().fitSize([width, height], { type: 'Sphere' })
 }
 
 export function projectPoint(
-  projection: d3.GeoProjection,
+  projection: GeoProjection,
   lng: number,
   lat: number,
 ): [number, number] {
@@ -34,6 +36,8 @@ export function computeRegionTransform(
   }
 }
 
-export function transformToD3Identity(transform: MapTransform): d3.ZoomTransform {
-  return d3.zoomIdentity.translate(transform.x, transform.y).scale(transform.k)
+export function transformToD3Identity(transform: MapTransform): ZoomTransform {
+  return zoomIdentity.translate(transform.x, transform.y).scale(transform.k)
 }
+
+export { geoGraticule10, geoPath }

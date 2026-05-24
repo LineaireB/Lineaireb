@@ -2,11 +2,11 @@
  * Theme taxonomy helpers: resolve tag trees, human labels, and civ filtering.
  * All tag ids must exist in `src/data/themes.ts`.
  */
-import { CIVILISATIONS } from '@/data/civilisations'
+import { CIVILIZATIONS } from '@/data/civilizations'
 import { THEMES } from '@/data/themes'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 import type { TagId, ThemeNode } from '@/types/theme'
-import type { SubsistanceTag } from '@/types/map'
+import type { SubsistenceTag } from '@/types/map'
 
 /** Collect all leaf tag ids under a theme node (includes the node key when provided). */
 export function getAllTags(node: ThemeNode, prefix = ''): TagId[] {
@@ -60,25 +60,25 @@ export function getAllThemeTagIds(): TagId[] {
   return Object.values(THEMES).flatMap((node) => getAllTags(node))
 }
 
-/** Civilisations tagged with both subsistence modes in compare mode. */
-export function getHybridCivs(compareA: SubsistanceTag, compareB: SubsistanceTag): Civilisation[] {
-  return CIVILISATIONS.filter(
+/** Civilizations tagged with both subsistence modes in compare mode. */
+export function getHybridCivs(compareA: SubsistenceTag, compareB: SubsistenceTag): Civilization[] {
+  return CIVILIZATIONS.filter(
     (c) => c.tags.includes(compareA) && c.tags.includes(compareB),
   )
 }
 
 export function countCivsForTheme(node: ThemeNode, nodeKey: string): number {
   const tags = getAllTags(node, nodeKey)
-  return CIVILISATIONS.filter((c) => tags.some((t) => c.tags.includes(t))).length
+  return CIVILIZATIONS.filter((c) => tags.some((t) => c.tags.includes(t))).length
 }
 
 export function isCivActive(
-  civ: Civilisation,
-  mode: 'explorer' | 'comparer',
+  civ: Civilization,
+  mode: 'explorer' | 'compare',
   selectedTheme: string | null,
   relevantTags: TagId[],
 ): boolean {
-  if (mode === 'comparer') return true
+  if (mode === 'compare') return true
   if (!selectedTheme) return true
   return relevantTags.some((t) => civ.tags.includes(t))
 }

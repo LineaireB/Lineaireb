@@ -1,6 +1,5 @@
-import * as d3 from 'd3'
 import { P } from '@/data/palette'
-import { createProjection } from '@/lib/geo'
+import { createProjection, geoGraticule10, geoPath } from '@/lib/geo'
 import type { FeatureCollection } from 'geojson'
 import type { MapDimensions, MapTransform } from '@/types/map'
 
@@ -12,13 +11,13 @@ interface MapLayerProps {
 
 export default function MapLayer({ dims, transform, worldData }: MapLayerProps) {
   const projection = createProjection(dims.w, dims.h)
-  const geoPath = d3.geoPath(projection)
+  const path = geoPath(projection)
 
   return (
     <>
-      <path d={geoPath({ type: 'Sphere' }) ?? undefined} fill={P.ocean} />
+      <path d={path({ type: 'Sphere' }) ?? undefined} fill={P.ocean} />
       <path
-        d={geoPath(d3.geoGraticule10()) ?? undefined}
+        d={path(geoGraticule10()) ?? undefined}
         fill="none"
         stroke={P.graticule}
         strokeWidth={0.4 / transform.k}
@@ -26,14 +25,14 @@ export default function MapLayer({ dims, transform, worldData }: MapLayerProps) 
       {worldData.features.map((f, i) => (
         <path
           key={i}
-          d={geoPath(f) ?? undefined}
+          d={path(f) ?? undefined}
           fill={P.land}
           stroke={P.landStroke}
           strokeWidth={0.4 / transform.k}
         />
       ))}
       <path
-        d={geoPath({ type: 'Sphere' }) ?? undefined}
+        d={path({ type: 'Sphere' }) ?? undefined}
         fill="none"
         stroke={P.sphere}
         strokeWidth={1 / transform.k}

@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
 import { P, epColor } from '@/data/palette'
+import { useAnimatedPresence } from '@/hooks/useAnimatedPresence'
 import { getTagLabel } from '@/lib/tags'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 import type { TagId } from '@/types/theme'
 
-const PANEL_ANIM_MS = 250
-
-interface PanneauDetailProps {
-  civ: Civilisation | null
+interface DetailPanelProps {
+  civ: Civilization | null
   fogMode: boolean
   selectedTheme: string | null
   relevantTags: TagId[]
@@ -16,7 +14,7 @@ interface PanneauDetailProps {
   onClosingChange?: (closing: boolean) => void
 }
 
-export default function PanneauDetail({
+export default function DetailPanel({
   civ,
   fogMode,
   selectedTheme,
@@ -24,38 +22,10 @@ export default function PanneauDetail({
   onClose,
   onTagClick,
   onClosingChange,
-}: PanneauDetailProps) {
-  const [visibleCiv, setVisibleCiv] = useState<Civilisation | null>(civ)
-  const [isClosing, setIsClosing] = useState(false)
-  const visibleCivRef = useRef(visibleCiv)
-  visibleCivRef.current = visibleCiv
-
-  useEffect(() => {
-    if (civ) {
-      setVisibleCiv(civ)
-      setIsClosing(false)
-      return
-    }
-
-    if (visibleCivRef.current) {
-      setIsClosing(true)
-    }
-  }, [civ])
-
-  useEffect(() => {
-    onClosingChange?.(isClosing)
-  }, [isClosing, onClosingChange])
-
-  useEffect(() => {
-    if (!isClosing) return
-
-    const timer = window.setTimeout(() => {
-      setVisibleCiv(null)
-      setIsClosing(false)
-    }, PANEL_ANIM_MS)
-
-    return () => window.clearTimeout(timer)
-  }, [isClosing])
+}: DetailPanelProps) {
+  const { visible: visibleCiv, isClosing } = useAnimatedPresence(civ, {
+    onClosingChange,
+  })
 
   if (!visibleCiv) {
     const hint = fogMode
@@ -85,12 +55,12 @@ export default function PanneauDetail({
         {visibleCiv.episode}
       </div>
       <div className="detail-panel__title">{visibleCiv.label}</div>
-      <div className="detail-panel__period">{visibleCiv.periode}</div>
+      <div className="detail-panel__period">{visibleCiv.period}</div>
       <div className="detail-panel__region">📍 {visibleCiv.region}</div>
 
       <div className="detail-panel__divider" />
 
-      <p className="detail-panel__resume">{visibleCiv.resume}</p>
+      <p className="detail-panel__resume">{visibleCiv.summary}</p>
 
       <div className="detail-panel__tags-title">Connexions thématiques</div>
       <div className="detail-panel__tags">

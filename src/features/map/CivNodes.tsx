@@ -1,15 +1,15 @@
 import { P, epColor, COMPARE_COLORS } from "@/data/palette";
-import { CIVILISATIONS } from "@/data/civilisations";
+import { CIVILIZATIONS } from "@/data/civilizations";
 import { createProjection } from "@/lib/geo";
 import { isCivActive } from "@/lib/tags";
 import { getCivTooltipLayout } from "@/features/map/mapTooltipLayout";
-import type { Civilisation } from "@/types/civilisation";
+import type { Civilization } from "@/types/civilization";
 import type { TagId } from "@/types/theme";
 import type {
   AppMode,
   MapDimensions,
   MapTransform,
-  SubsistanceTag,
+  SubsistenceTag,
 } from "@/types/map";
 
 interface CivNodesProps {
@@ -20,12 +20,12 @@ interface CivNodesProps {
   relevantTags: TagId[];
   selectedCivId: string | null;
   hoveredCivId: string | null;
-  compareA: SubsistanceTag;
-  compareB: SubsistanceTag;
+  compareA: SubsistenceTag;
+  compareB: SubsistenceTag;
   fogMode: boolean;
   revealAnim: Set<string>;
-  isDiscovered: (civ: Civilisation) => boolean;
-  onCivClick: (civ: Civilisation) => void;
+  isDiscovered: (civ: Civilization) => boolean;
+  onCivClick: (civ: Civilization) => void;
   onCivHover: (id: string | null) => void;
 }
 
@@ -34,11 +34,11 @@ function CivTooltip({
   color,
   scale,
 }: {
-  civ: Civilisation;
+  civ: Civilization;
   color: string;
   scale: number;
 }) {
-  const tip = getCivTooltipLayout(civ.label, civ.periode, civ.episode);
+  const tip = getCivTooltipLayout(civ.label, civ.period, civ.episode);
 
   return (
     <g transform={`scale(${scale})`} pointerEvents="none">
@@ -67,14 +67,14 @@ function CivTooltip({
       ))}
       <text
         x={0}
-        y={tip.periodeY}
+        y={tip.periodY}
         textAnchor="middle"
         fill={color}
         fontSize={8}
         fontFamily="Georgia,serif"
         opacity={0.9}
       >
-        {civ.periode}
+        {civ.period}
       </text>
       <text
         x={0}
@@ -149,8 +149,8 @@ export default function CivNodes({
   const strokeW = Math.max(0.5, 1.5 / transform.k);
   const tipScale = 1 / transform.k;
 
-  const getCompareColor = (civ: Civilisation): string | null => {
-    if (mode !== "comparer") return null;
+  const getCompareColor = (civ: Civilization): string | null => {
+    if (mode !== "compare") return null;
     const inA = civ.tags.includes(compareA);
     const inB = civ.tags.includes(compareB);
     if (inA && inB) return P.accent;
@@ -159,7 +159,7 @@ export default function CivNodes({
     return null;
   };
 
-  const tooltipCivs = CIVILISATIONS.filter((civ) => {
+  const tooltipCivs = CIVILIZATIONS.filter((civ) => {
     const isSel = selectedCivId === civ.id;
     const isHov = hoveredCivId === civ.id;
     if (!isSel && !isHov) return false;
@@ -174,18 +174,18 @@ export default function CivNodes({
   return (
     <>
       <g className="civ-nodes__markers">
-        {CIVILISATIONS.map((civ) => {
+        {CIVILIZATIONS.map((civ) => {
           const [px, py] = projection([civ.lng, civ.lat]) as [number, number];
           const disc = isDiscovered(civ);
           const isAnim = revealAnim.has(civ.id);
           const cmpColor = getCompareColor(civ);
           const active =
-            mode === "comparer"
+            mode === "compare"
               ? !!cmpColor
               : isCivActive(civ, mode, selectedTheme, relevantTags);
           const isSel = selectedCivId === civ.id;
           const color =
-            mode === "comparer"
+            mode === "compare"
               ? (cmpColor ?? P.borderFaint)
               : epColor(civ.episode);
           const r = isSel ? dotR * 1.6 : dotR;
@@ -201,7 +201,7 @@ export default function CivNodes({
                 }}
                 onMouseEnter={() => onCivHover(civ.id)}
                 onMouseLeave={() => onCivHover(null)}
-                style={{ opacity: active || mode === "comparer" ? 1 : 0.4 }}
+                style={{ opacity: active || mode === "compare" ? 1 : 0.4 }}
               >
                 <circle
                   className="fog-ring"
@@ -304,7 +304,7 @@ export default function CivNodes({
           const disc = isDiscovered(civ);
           const cmpColor = getCompareColor(civ);
           const color =
-            mode === "comparer"
+            mode === "compare"
               ? (cmpColor ?? P.borderFaint)
               : epColor(civ.episode);
 

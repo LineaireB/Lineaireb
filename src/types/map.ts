@@ -1,4 +1,4 @@
-import type { GeoRegion } from './civilisation'
+import type { GeoRegion } from './civilization'
 
 export interface MapDimensions {
   w: number
@@ -19,9 +19,9 @@ export interface RegionPreset {
   zoom: number
 }
 
-export type AppMode = 'explorer' | 'comparer'
+export type AppMode = 'explorer' | 'compare'
 
-export type SubsistanceTag =
+export type SubsistenceTag =
   | 'chasse_cueillette'
   | 'agriculture'
   | 'agroforesterie'
@@ -30,10 +30,10 @@ export type SubsistanceTag =
 
 export interface ComparisonData {
   label: string
-  couleur: string
-  dimension_politique: string
+  color: string
+  politicalOrganization: string
   resilience: string
-  rapport_foret: string
-  effondrement: string
-  exemple_lineaireb: string
+  forestRelation: string
+  collapse: string
+  linearBExamples: string
 }

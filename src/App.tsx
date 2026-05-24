@@ -3,37 +3,52 @@
  * Map rendering lives in `features/map/`; business rules in `lib/` and `features/*`.
  */
 import { useCallback, useMemo, useState } from 'react'
-import { TOTAL } from '@/data/civilisations'
-import { COMPARAISONS } from '@/data/comparaisons'
+import { TOTAL } from '@/data/civilizations'
+import { COMPARISONS } from '@/data/comparisons'
 import AppFooter from '@/components/layout/AppFooter'
 import AppHeader from '@/components/layout/AppHeader'
-import PanneauDetail from '@/components/PanneauDetail'
+import DetailPanel from '@/components/DetailPanel'
 import PodcastPanel from '@/components/PodcastPanel'
 import ComparePanel from '@/features/compare/ComparePanel'
 import ExplorerSidebar from '@/features/explorer/ExplorerSidebar'
 import MapView from '@/features/map/MapView'
 import { useDiscovery } from '@/features/fog/useDiscovery'
+import { useUiPanels } from '@/hooks/useUiPanels'
 import { getRelevantTags } from '@/lib/tags'
-import type { Civilisation } from '@/types/civilisation'
+import type { Civilization } from '@/types/civilization'
 import type { TagId } from '@/types/theme'
-import type { AppMode, RegionPreset, SubsistanceTag } from '@/types/map'
+import { isDesktopViewport } from '@/lib/breakpoints'
+import type { AppMode, RegionPreset, SubsistenceTag } from '@/types/map'
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>('explorer')
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
-  const [selectedCiv, setSelectedCiv] = useState<Civilisation | null>(null)
   const [hoveredCivId, setHoveredCivId] = useState<string | null>(null)
-  const [compareA, setCompareA] = useState<SubsistanceTag>('chasse_cueillette')
-  const [compareB, setCompareB] = useState<SubsistanceTag>('agriculture')
+  const [compareA, setCompareA] = useState<SubsistenceTag>('chasse_cueillette')
+  const [compareB, setCompareB] = useState<SubsistenceTag>('agriculture')
   const [activeGeo, setActiveGeo] = useState<string | null>(null)
   const [flyRegion, setFlyRegion] = useState<RegionPreset | null>(null)
-  const [toast, setToast] = useState<Civilisation | null>(null)
+  const [toast, setToast] = useState<Civilization | null>(null)
   const [fogMode, setFogMode] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [detailClosing, setDetailClosing] = useState(false)
-  const [podcastPanelOpen, setPodcastPanelOpen] = useState(false)
-  const [podcastClosing, setPodcastClosing] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(() => isDesktopViewport())
   const [hybridsHighlightToken, setHybridsHighlightToken] = useState(0)
+
+  const panels = useUiPanels()
+  const {
+    selectedCiv,
+    setSelectedCiv,
+    detailClosing,
+    handleDetailClosingChange,
+    podcastPanelOpen,
+    podcastClosing,
+    podcastActive,
+    detailBackdropActive,
+    showExplorerDetail,
+    dismissMapOverlays,
+    closePodcastPanel,
+    togglePodcastPanel: togglePodcastPanelBase,
+    handlePodcastClosingChange,
+  } = panels
 
   const { revealAnim, discoveredCount, isDiscovered, discover, resetFog } = useDiscovery(fogMode)
 
@@ -46,70 +61,42 @@ export default function App() {
     setFlyRegion(region)
   }, [])
 
-  const beginClosePodcastPanel = useCallback(() => {
-    setPodcastPanelOpen((wasOpen) => {
-      if (wasOpen) {
-        setPodcastClosing(true)
-      }
-      return false
-    })
-  }, [])
+  const dismissAllMapOverlays = useCallback(() => {
+    dismissMapOverlays()
+    setToast(null)
+    setHoveredCivId(null)
+  }, [dismissMapOverlays])
 
   const handleCivClick = useCallback(
-    (civ: Civilisation) => {
+    (civ: Civilization) => {
       if (fogMode && !isDiscovered(civ)) discover(civ)
-      beginClosePodcastPanel()
+      closePodcastPanel()
       setToast(civ)
       setSelectedCiv((prev) => (prev?.id === civ.id ? null : civ))
       closeSidebar()
     },
-    [fogMode, isDiscovered, discover, closeSidebar, beginClosePodcastPanel],
+    [fogMode, isDiscovered, discover, closeSidebar, closePodcastPanel, setSelectedCiv],
   )
 
-  const handleCompareCivSelect = useCallback((civ: Civilisation) => {
+  const handleCompareCivSelect = useCallback((civ: Civilization) => {
     setSelectedCiv(civ)
     setToast(null)
-  }, [])
+  }, [setSelectedCiv])
 
   const focusCompareHybrids = useCallback(() => {
     setHybridsHighlightToken((t) => t + 1)
   }, [])
 
-  const handleDetailClosingChange = useCallback((closing: boolean) => {
-    setDetailClosing(closing)
-  }, [])
-
-  const dismissMapOverlays = useCallback(() => {
-    setSelectedCiv(null)
+  const togglePodcastPanel = useCallback(() => {
+    togglePodcastPanelBase()
     setToast(null)
     setHoveredCivId(null)
-    beginClosePodcastPanel()
-  }, [beginClosePodcastPanel])
-
-  const closePodcastPanel = beginClosePodcastPanel
-
-  const togglePodcastPanel = useCallback(() => {
-    setPodcastPanelOpen((wasOpen) => {
-      if (wasOpen) {
-        setPodcastClosing(true)
-        return false
-      }
-      setPodcastClosing(false)
-      setSelectedCiv(null)
-      setToast(null)
-      setHoveredCivId(null)
-      return true
-    })
-  }, [])
-
-  const handlePodcastClosingChange = useCallback((closing: boolean) => {
-    setPodcastClosing(closing)
-  }, [])
+  }, [togglePodcastPanelBase])
 
   const handleFogReset = useCallback(() => {
     resetFog()
     setSelectedCiv(null)
-  }, [resetFog])
+  }, [resetFog, setSelectedCiv])
 
   const handleTagClick = useCallback((tag: TagId) => {
     setSelectedTheme(tag)
@@ -117,14 +104,20 @@ export default function App() {
     closeSidebar()
   }, [closeSidebar])
 
-  const handleModeChange = useCallback((next: AppMode) => {
-    setMode(next)
-    beginClosePodcastPanel()
-    closeSidebar()
-  }, [closeSidebar, beginClosePodcastPanel])
+  const handleModeChange = useCallback(
+    (next: AppMode) => {
+      if (next === mode) return
+      setMode(next)
+      closePodcastPanel()
+    },
+    [mode, closePodcastPanel],
+  )
 
-  const dataA = COMPARAISONS[compareA]
-  const dataB = COMPARAISONS[compareB]
+  const showDetailBackdrop =
+    mode === 'explorer' && detailBackdropActive && showExplorerDetail
+
+  const dataA = COMPARISONS[compareA]
+  const dataB = COMPARISONS[compareB]
 
   return (
     <div className="app-shell">
@@ -148,7 +141,7 @@ export default function App() {
         onTogglePodcastPanel={togglePodcastPanel}
       />
 
-      {sidebarOpen && (
+      {mode === 'explorer' && sidebarOpen && (
         <button
           type="button"
           className="app-backdrop"
@@ -157,20 +150,24 @@ export default function App() {
         />
       )}
 
-      <div className={`app-body ${mode === 'comparer' ? 'app-body--compare' : ''}`}>
-        {mode === 'explorer' ? (
-          <ExplorerSidebar
-            open={sidebarOpen}
-            fogMode={fogMode}
-            discoveredCount={discoveredCount}
-            total={TOTAL}
-            selectedTheme={selectedTheme}
-            onSelectTheme={setSelectedTheme}
-            activeGeo={activeGeo}
-            onRegionClick={handleRegionClick}
-            onNavigate={closeSidebar}
-          />
-        ) : null}
+      <div
+        className={`app-body ${mode === 'compare' ? 'app-body--compare' : 'app-body--explorer'}`}
+      >
+        <ExplorerSidebar
+          visible={mode === 'explorer'}
+          open={sidebarOpen}
+          fogMode={fogMode}
+          discoveredCount={discoveredCount}
+          total={TOTAL}
+          selectedTheme={selectedTheme}
+          onSelectTheme={setSelectedTheme}
+          activeGeo={activeGeo}
+          onRegionClick={handleRegionClick}
+          onToggle={() => setSidebarOpen((v) => !v)}
+          onNavigate={() => {
+            if (!isDesktopViewport()) closeSidebar()
+          }}
+        />
 
         <MapView
           mode={mode}
@@ -188,10 +185,10 @@ export default function App() {
           onCivClick={handleCivClick}
           onCivHover={setHoveredCivId}
           onToastClose={() => setToast(null)}
-          onMapBackgroundClick={dismissMapOverlays}
+          onMapBackgroundClick={dismissAllMapOverlays}
         />
 
-        {mode === 'comparer' ? (
+        {mode === 'compare' ? (
           <ComparePanel
             compareA={compareA}
             compareB={compareB}
@@ -202,19 +199,16 @@ export default function App() {
           />
         ) : null}
 
-        {(selectedCiv || detailClosing) &&
-          mode === 'explorer' &&
-          !podcastPanelOpen &&
-          !podcastClosing && (
+        {showDetailBackdrop && (
           <button
             type="button"
             className={`app-backdrop app-backdrop--detail${detailClosing ? ' app-backdrop--closing' : ''}`}
             aria-label="Fermer la fiche"
-            onClick={dismissMapOverlays}
+            onClick={dismissAllMapOverlays}
           />
         )}
 
-        {(podcastPanelOpen || podcastClosing) && (
+        {podcastActive && (
           <button
             type="button"
             className={`app-backdrop app-backdrop--detail app-backdrop--podcast${podcastClosing ? ' app-backdrop--closing' : ''}${mode === 'explorer' ? ' app-backdrop--podcast-inline' : ''}`}
@@ -223,26 +217,25 @@ export default function App() {
           />
         )}
 
-        {mode === 'explorer' && !(podcastPanelOpen || podcastClosing) ? (
-          <PanneauDetail
+        {mode === 'explorer' && showExplorerDetail ? (
+          <DetailPanel
             civ={selectedCiv}
             fogMode={fogMode}
             selectedTheme={selectedTheme}
             relevantTags={relevantTags}
-            onClose={dismissMapOverlays}
+            onClose={dismissAllMapOverlays}
             onTagClick={handleTagClick}
             onClosingChange={handleDetailClosingChange}
           />
         ) : null}
 
-        {(podcastPanelOpen || podcastClosing) && (
+        {podcastActive && (
           <PodcastPanel
             open={podcastPanelOpen}
             onClose={closePodcastPanel}
             onClosingChange={handlePodcastClosingChange}
           />
         )}
-
       </div>
 
       <AppFooter />

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import * as d3 from 'd3'
+import { select } from 'd3-selection'
+import 'd3-transition'
+import { zoom, zoomIdentity, type D3ZoomEvent, type ZoomBehavior } from 'd3-zoom'
 import { transformToD3Identity } from '@/lib/geo'
 import type { MapDimensions, MapTransform } from '@/types/map'
 
@@ -15,39 +17,40 @@ interface UseMapZoomResult {
 
 export function useMapZoom(dims: MapDimensions, ready: boolean): UseMapZoomResult {
   const svgRef = useRef<SVGSVGElement>(null)
-  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null)
+  const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null)
   const [transform, setTransform] = useState<MapTransform>({ x: 0, y: 0, k: 1 })
   const [zoomLevel, setZoomLevel] = useState(1)
 
   useEffect(() => {
     if (!svgRef.current || !ready) return
 
-    const zoom = d3.zoom<SVGSVGElement, unknown>()
+    const zoomBehavior = zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.8, 20])
-      .on('zoom', (ev: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+      .on('zoom', (ev: D3ZoomEvent<SVGSVGElement, unknown>) => {
         setTransform({ x: ev.transform.x, y: ev.transform.y, k: ev.transform.k })
         setZoomLevel(Math.round(ev.transform.k * 10) / 10)
       })
 
-    zoomRef.current = zoom
-    d3.select(svgRef.current).call(zoom)
+    zoomRef.current = zoomBehavior
+    const svg = svgRef.current
+    select(svg).call(zoomBehavior)
 
     return () => {
-      d3.select(svgRef.current).on('.zoom', null)
+      select(svg).on('.zoom', null)
     }
   }, [ready, dims])
 
   const resetZoom = useCallback(() => {
     if (!svgRef.current || !zoomRef.current) return
-    d3.select(svgRef.current)
+    select(svgRef.current)
       .transition()
       .duration(600)
-      .call(zoomRef.current.transform, d3.zoomIdentity)
+      .call(zoomRef.current.transform, zoomIdentity)
   }, [])
 
   const zoomIn = useCallback(() => {
     if (!svgRef.current || !zoomRef.current) return
-    d3.select(svgRef.current)
+    select(svgRef.current)
       .transition()
       .duration(300)
       .call(zoomRef.current.scaleBy, 1.6)
@@ -55,7 +58,7 @@ export function useMapZoom(dims: MapDimensions, ready: boolean): UseMapZoomResul
 
   const zoomOut = useCallback(() => {
     if (!svgRef.current || !zoomRef.current) return
-    d3.select(svgRef.current)
+    select(svgRef.current)
       .transition()
       .duration(300)
       .call(zoomRef.current.scaleBy, 0.625)
@@ -63,7 +66,7 @@ export function useMapZoom(dims: MapDimensions, ready: boolean): UseMapZoomResul
 
   const flyTo = useCallback((target: MapTransform) => {
     if (!svgRef.current || !zoomRef.current) return
-    d3.select(svgRef.current)
+    select(svgRef.current)
       .transition()
       .duration(700)
       .call(zoomRef.current.transform, transformToD3Identity(target))

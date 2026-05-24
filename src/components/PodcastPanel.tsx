@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { P } from "@/data/palette";
+import { P } from '@/data/palette'
 import {
   PODCAST_DESCRIPTION,
   PODCAST_LINKS,
   PODCAST_TAGLINE,
-} from "@/data/podcastLinks";
-
-const PANEL_ANIM_MS = 250;
+} from '@/data/podcastLinks'
+import { useAnimatedPresence } from '@/hooks/useAnimatedPresence'
 
 interface PodcastPanelProps {
-  open: boolean;
-  onClose: () => void;
-  onClosingChange?: (closing: boolean) => void;
+  open: boolean
+  onClose: () => void
+  onClosingChange?: (closing: boolean) => void
 }
 
 export default function PodcastPanel({
@@ -19,43 +17,15 @@ export default function PodcastPanel({
   onClose,
   onClosingChange,
 }: Readonly<PodcastPanelProps>) {
-  const [visible, setVisible] = useState(open);
-  const [isClosing, setIsClosing] = useState(false);
-  const visibleRef = useRef(visible);
-  visibleRef.current = visible;
+  const { visible, isClosing } = useAnimatedPresence(open ? true : null, {
+    onClosingChange,
+  })
 
-  useEffect(() => {
-    if (open) {
-      setVisible(true);
-      setIsClosing(false);
-      return;
-    }
-
-    if (visibleRef.current) {
-      setIsClosing(true);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    onClosingChange?.(isClosing);
-  }, [isClosing, onClosingChange]);
-
-  useEffect(() => {
-    if (!isClosing) return;
-
-    const timer = window.setTimeout(() => {
-      setVisible(false);
-      setIsClosing(false);
-    }, PANEL_ANIM_MS);
-
-    return () => window.clearTimeout(timer);
-  }, [isClosing]);
-
-  if (!visible) return null;
+  if (!visible) return null
 
   const panelClass = isClosing
-    ? "detail-panel podcast-panel detail-panel--closing"
-    : "detail-panel podcast-panel";
+    ? 'detail-panel podcast-panel detail-panel--closing'
+    : 'detail-panel podcast-panel'
 
   return (
     <aside
@@ -105,5 +75,5 @@ export default function PodcastPanel({
         Podcast par Corréos
       </p>
     </aside>
-  );
+  )
 }

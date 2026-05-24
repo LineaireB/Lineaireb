@@ -17,8 +17,8 @@ lineaire-b/
 │   ├── data/
 │   │   ├── palette.ts          → design system colors
 │   │   ├── themes.ts           → theme tree
-│   │   ├── civilisations.ts    → all map nodes
-│   │   ├── comparaisons.ts     → comparison mode copy
+│   │   ├── civilizations.ts    → all map nodes
+│   │   ├── comparisons.ts      → comparison mode copy
 │   │   ├── constants.ts        → fog milestones, region zoom presets
 │   │   └── geo/
 │   │       └── countries-110m.json  → bundled Natural Earth TopoJSON
@@ -27,7 +27,9 @@ lineaire-b/
 │   │   ├── geo.ts              → D3 projection, region zoom
 │   │   └── storage.ts          → fog persistence (localStorage)
 │   ├── hooks/
+│   │   ├── useAnimatedPresence.ts
 │   │   ├── useContainerSize.ts
+│   │   ├── useUiPanels.ts
 │   │   ├── useWorldMap.ts
 │   │   └── useMapZoom.ts
 │   ├── features/
@@ -37,14 +39,17 @@ lineaire-b/
 │   │   └── fog/                → fog of war, discovery progress
 │   ├── components/
 │   │   ├── layout/AppHeader.tsx
-│   │   └── PanneauDetail.tsx
-│   ├── styles/layout.css
+│   │   └── DetailPanel.tsx
+│   ├── styles/
+│   │   ├── tokens.css          → CSS variables (palette mirror)
+│   │   ├── layout.css          → imports layout modules
+│   │   └── layout/             → header, panels, map, compare, …
 │   ├── App.tsx
 │   ├── main.tsx
 │   └── index.css
 ├── src/__tests__/              → Vitest (data integrity, geo, tags)
 ├── .nvmrc                      → Node 20 (CI + local)
-├── .github/workflows/ci.yml    → typecheck + test + build
+├── .github/workflows/ci.yml    → typecheck + lint + test + build
 ├── index.html
 ├── vite.config.ts
 ├── tsconfig.json
@@ -93,9 +98,10 @@ npm run dev
 
 ```bash
 npm run typecheck   # strict TypeScript
-npm run test        # Vitest — data integrity
+npm run test        # Vitest — unit + integration (132 tests)
 npm run lint        # ESLint
 npm run build       # production build → dist/
+npm run build:analyze  # build + print dist asset sizes
 ```
 
 ---
@@ -123,24 +129,36 @@ Publish directory: **`dist/`**
 
 ## Add an episode
 
-Edit `src/data/civilisations.ts` and append an object to the `CIVILISATIONS` array:
+Edit `src/data/civilizations.ts` and append an object to the `CIVILIZATIONS` array:
 
 ```ts
 {
   id:      'my_unique_id',
   label:   'Site name',
-  periode: '4th millennium BCE',
+  period: '4th millennium BCE',
   region:  'Geographic region',
   geo:     'europe',   // bretagne | proche_orient | europe | asie | ameriques | null
   lng:     2.5,
   lat:     48.5,
   episode: 'Épisode X',
   tags:    ['agriculture', 'non_lineaire'],  // see src/data/themes.ts
-  resume:  'Site description for the detail panel.',
+  summary: 'Site description for the detail panel.',
 }
 ```
 
 Run `npm run test` to validate tags and `geo` region keys.
+
+### Test layout
+
+| Area     | File                                                                         | What it guards                                                 |
+| -------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Data     | `civilizations.test.ts`, `comparisons.test.ts`                               | Civ records, tags, geo keys, comparison copy                   |
+| Lib      | `tags.test.ts`, `geo.test.ts`, `storage.test.ts`, `mapTooltipLayout.test.ts` | Theme tree, map projection, fog persistence, tooltips          |
+| Hooks    | `useDiscovery.test.tsx`, `useAnimatedPresence.test.tsx`                      | Mystère mode, panel enter/exit                                 |
+| Features | `ComparePanel`, `DetailPanel`, `ThemeTree`, `ProgressBar`, `DiscoveryToast`  | Compare hybrids, detail sheet, theme picker, milestones, toast |
+| App      | `App.features.test.tsx`, `App.mobile.test.tsx`                               | Desktop flows + mobile drawer, bottom sheet, overlays          |
+| Layout   | `breakpoints.test.ts`, `layout.breakpoints.test.ts`                          | JS/CSS breakpoint contract (900px tablet)                      |
+| Map UI   | `MapHint.test.tsx`                                                           | Touch vs desktop map hints                                     |
 
 ---
 

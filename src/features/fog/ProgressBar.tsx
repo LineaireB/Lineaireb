@@ -13,7 +13,7 @@ export default function ProgressBar({ count, total }: ProgressBarProps) {
   return (
     <div className="progress-bar">
       <div className="progress-bar__header">
-        <div className="progress-bar__label">Civilisations découvertes</div>
+        <div className="progress-bar__label">Civilizations découvertes</div>
         <div className="progress-bar__count" style={{ color: count === total ? P.accent : P.sandDim }}>
           {count}
           <span className="progress-bar__count-fraction">/{total}</span>

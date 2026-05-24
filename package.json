@@ -2,10 +2,15 @@
   "name": "lineaire-b",
   "version": "1.0.0",
   "private": true,
+  "author": "Chafik El Idrissi (https://github.com/celidrissi)",
+  "contributors": ["Benjamin Defert"],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint src"
   },
   "dependencies": {
     "d3": "^7.9.0",
@@ -14,7 +19,23 @@
     "topojson-client": "^3.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/d3": "^7.4.3",
+    "@types/geojson": "^7946.0.16",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@types/topojson-client": "^3.1.5",
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2"
+    "eslint": "^10.4.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.6.0",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^5.4.2",
+    "vitest": "^4.1.7",
+    "world-atlas": "^2.0.2"
   }
 }

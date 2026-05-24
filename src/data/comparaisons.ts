@@ -1,6 +1,7 @@
-import { P } from './palette.js'
+import { P } from '@/data/palette'
+import type { ComparisonData, SubsistanceTag } from '@/types/map'
 
-export const COMPARAISONS = {
+export const COMPARAISONS: Record<SubsistanceTag, ComparisonData> = {
   chasse_cueillette: {
     label: 'Chasse-cueillette', couleur: P.green,
     dimension_politique: "Souvent sans État centralisé. Mobilité = résistance naturelle à la taxation. Capacité à alterner hiérarchie saisonnière et égalitarisme (Graeber/Wengrow).",
@@ -43,15 +44,22 @@ export const COMPARAISONS = {
   },
 }
 
-export const SUBSISTANCE_TAGS   = ['chasse_cueillette','agriculture','agroforesterie','peche','pastoralisme']
-export const SUBSISTANCE_LABELS = {
-  chasse_cueillette:'Chasse-cueillette', agriculture:'Agriculture',
-  agroforesterie:'Agroforesterie', peche:'Pêche', pastoralisme:'Pastoralisme',
+export const SUBSISTANCE_TAGS: SubsistanceTag[] = [
+  'chasse_cueillette', 'agriculture', 'agroforesterie', 'peche', 'pastoralisme',
+]
+
+export const SUBSISTANCE_LABELS: Record<SubsistanceTag, string> = {
+  chasse_cueillette: 'Chasse-cueillette',
+  agriculture: 'Agriculture',
+  agroforesterie: 'Agroforesterie',
+  peche: 'Pêche',
+  pastoralisme: 'Pastoralisme',
 }
+
 export const DIMENSIONS = [
-  { key:'dimension_politique', label:'Organisation politique' },
-  { key:'resilience',          label:'Résilience' },
-  { key:'rapport_foret',       label:'Rapport à la forêt' },
-  { key:'effondrement',        label:'Effondrement' },
-  { key:'exemple_lineaireb',   label:'Dans LinéaireB' },
+  { key: 'dimension_politique' as const, label: 'Organisation politique' },
+  { key: 'resilience' as const, label: 'Résilience' },
+  { key: 'rapport_foret' as const, label: 'Rapport à la forêt' },
+  { key: 'effondrement' as const, label: 'Effondrement' },
+  { key: 'exemple_lineaireb' as const, label: 'Dans LinéaireB' },
 ]

@@ -101,7 +101,7 @@ npm run dev
 
 ```bash
 npm run typecheck   # strict TypeScript
-npm run test        # Vitest — unit + integration (140 tests)
+npm run test        # Vitest — unit + integration
 npm run lint        # ESLint
 npm run build       # production build → dist/
 npm run build:analyze  # build + print dist asset sizes
@@ -153,15 +153,15 @@ Run `npm run test` to validate tags and `geo` region keys.
 
 ### Test layout
 
-| Area     | File                                                                         | What it guards                                                 |
-| -------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Data     | `civilizations.test.ts`, `comparisons.test.ts`                               | Civ records, tags, geo keys, comparison copy                   |
-| Lib      | `tags.test.ts`, `geo.test.ts`, `storage.test.ts`, `mapTooltipLayout.test.ts` | Theme tree, map projection, fog persistence, tooltips          |
-| Hooks    | `useDiscovery.test.tsx`, `useAnimatedPresence.test.tsx`                      | Mystère mode, panel enter/exit                                 |
-| Features | `ComparePanel`, `DetailPanel`, `ThemeTree`, `ProgressBar`, `DiscoveryToast`  | Compare hybrids, detail sheet, theme picker, milestones, toast |
-| App      | `App.features.test.tsx`, `App.mobile.test.tsx`                               | Desktop flows + mobile drawer, bottom sheet, overlays          |
-| Layout   | `breakpoints.test.ts`, `layout.breakpoints.test.ts`                          | JS/CSS breakpoint contract (900px tablet)                      |
-| Map UI   | `MapHint.test.tsx`                                                           | Touch vs desktop map hints                                     |
+| Area     | File                                                                                 | What it guards                                                 |
+| -------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Data     | `civilizations.test.ts`, `comparisons.test.ts`                                       | Civ records, tags, geo keys, comparison copy                   |
+| Lib      | `tags.test.ts`, `geo.test.ts`, `storage.test.ts`, `mapTooltipLayout.test.ts`         | Theme tree, map projection, fog persistence, tooltips          |
+| Hooks    | `useDiscovery.test.tsx`, `useAnimatedPresence.test.tsx`, `useContainerSize.test.tsx` | Mystère mode, panel enter/exit, map container measure          |
+| Features | `ComparePanel`, `DetailPanel`, `ThemeTree`, `ProgressBar`, `DiscoveryToast`          | Compare hybrids, detail sheet, theme picker, milestones, toast |
+| App      | `App.features.test.tsx`, `App.mobile.test.tsx`                                       | Desktop flows + mobile drawer, bottom sheet, overlays          |
+| Layout   | `breakpoints.test.ts`, `layout.breakpoints.test.ts`                                  | JS/CSS breakpoint contract (900px tablet)                      |
+| Map UI   | `MapHint.test.tsx`                                                                   | Touch vs desktop map hints                                     |
 
 ---
 

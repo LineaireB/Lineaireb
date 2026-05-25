@@ -117,7 +117,7 @@ Récapitulatif des évolutions UX (companion map du podcast _Linéaire B_).
 
 ## Technique (sans impact direct utilisateur)
 
-- Refactor TypeScript (features, hooks, `lib/`), **140** tests Vitest, CI GitHub Actions (typecheck, lint, test, build).
+- Refactor TypeScript (features, hooks, `lib/`), add tests Vitest, CI GitHub Actions (typecheck, lint, test, build).
 - CSS découpé en modules (`src/styles/layout/*`), tokens sur `.app-shell`, alias `@/`.
 - README et structure projet documentés en anglais ; ce fichier recense l’UX en français.
 

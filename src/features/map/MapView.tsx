@@ -51,7 +51,7 @@ export default function MapView({
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const worldData = useWorldMap()
-  const dims = useContainerSize(containerRef, [mode])
+  const dims = useContainerSize(containerRef, mode)
   const { svgRef, transform, zoomLevel, zoomIn, zoomOut, resetZoom, flyTo } = useMapZoom(dims, true)
 
   useEffect(() => {

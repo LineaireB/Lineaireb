@@ -44,7 +44,7 @@ export default function ComparePanel({
   }, [hybridsHighlightToken, hybridCivs.length])
 
   return (
-    <aside className="compare-panel">
+    <aside id="compare-panel" className="compare-panel">
       <div className="compare-panel__header">
         <div className="compare-panel__title">Comparaison</div>
         <div className="compare-panel__labels">

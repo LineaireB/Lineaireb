@@ -12,6 +12,7 @@ import {
   clickMapBackground,
   expectDetailCiv,
   expectMapSelectedCiv,
+  getComparePanel,
   getExplorerSidebar,
   goToCompareMode,
   renderApp,
@@ -52,7 +53,7 @@ describe('App — Explorer / Compare modes', () => {
 
     expect(getModeButton(/^comparer$/i)).toHaveClass('app-header__mode-btn--active')
     expect(screen.getByText('Comparaison')).toBeInTheDocument()
-    expect(document.querySelector('.compare-panel')).toBeInTheDocument()
+    expect(document.getElementById('compare-panel')).toBeInTheDocument()
     expect(document.querySelector('.explorer-sidebar-shell')).toHaveClass(
       'explorer-sidebar-shell--hidden',
     )
@@ -429,7 +430,7 @@ describe('App — Compare mode (panel)', () => {
     renderApp()
     goToCompareMode()
 
-    const panel = document.querySelector('.compare-panel')!
+    const panel = getComparePanel()
     expect(within(panel).getByText(COMPARISONS.chasse_cueillette.label)).toBeInTheDocument()
     expect(within(panel).getByText(COMPARISONS.agriculture.label)).toBeInTheDocument()
     expect(within(panel).getByText(/organisation politique/i)).toBeInTheDocument()
@@ -444,7 +445,7 @@ describe('App — Compare mode (panel)', () => {
     const hybrids = getHybridCivs('agriculture', 'agroforesterie')
     expect(hybrids.some((c) => c.id === 'mayas')).toBe(true)
 
-    const panel = document.querySelector('.compare-panel')!
+    const panel = getComparePanel()
     expect(within(panel).getByText('Cas hybrides')).toBeInTheDocument()
     expect(
       within(panel).getByRole('button', { name: new RegExp(MAP_CIV_MAYAS.label, 'i') }),
@@ -476,7 +477,7 @@ describe('App — Compare mode (panel)', () => {
 
     setCompareModes('agriculture', 'agroforesterie')
 
-    const panel = document.querySelector('.compare-panel')!
+    const panel = getComparePanel()
     fireEvent.click(
       within(panel).getByRole('button', { name: new RegExp(MAP_CIV_MAYAS.label, 'i') }),
     )
@@ -494,7 +495,7 @@ describe('App — Compare mode (panel)', () => {
 
     setCompareModes('peche', 'agroforesterie')
 
-    const panel = document.querySelector('.compare-panel')!
+    const panel = getComparePanel()
     expect(within(panel).getByText(SUBSISTENCE_LABELS.peche)).toBeInTheDocument()
     expect(within(panel).getByText(SUBSISTENCE_LABELS.agroforesterie)).toBeInTheDocument()
   })
@@ -515,7 +516,7 @@ describe('App — Compare mode + toast', () => {
 
     setCompareModes('agriculture', 'agroforesterie')
 
-    const panel = document.querySelector('.compare-panel')!
+    const panel = getComparePanel()
     fireEvent.click(
       within(panel).getByRole('button', { name: new RegExp(MAP_CIV_MAYAS.label, 'i') }),
     )

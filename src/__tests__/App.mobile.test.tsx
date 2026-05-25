@@ -214,7 +214,7 @@ describe("App — mobile compare layout", () => {
     fireEvent.click(screen.getByRole("button", { name: /^comparer$/i }));
 
     expect(document.querySelector(".app-body--compare")).toBeInTheDocument();
-    expect(document.querySelector(".compare-panel")).toBeInTheDocument();
+    expect(document.getElementById("compare-panel")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /thèmes/i }),
     ).not.toBeInTheDocument();

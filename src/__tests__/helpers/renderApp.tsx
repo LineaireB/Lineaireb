@@ -25,6 +25,12 @@ export function getExplorerSidebar() {
   return el
 }
 
+export function getComparePanel() {
+  const el = document.getElementById('compare-panel')
+  if (!el) throw new Error('compare-panel not found')
+  return el
+}
+
 export function expectMapSelectedCiv(civId: string | null) {
   const el = document.querySelector('[data-testid="map-selected-civ"]')
   if (civId === null) {

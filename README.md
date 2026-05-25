@@ -2,7 +2,9 @@
 
 > History is not a straight line.
 
-Interactive map of _LinéaireB_ podcast episodes. Civilizations placed on a real-world map, thematic filters, comparison mode, fog of war, zoom/pan.
+Interactive map of _Linéaire B_ podcast episodes. Civilizations placed on a real-world map, thematic filters, comparison mode, fog of war, zoom/pan.
+
+**UX changelog (French):** [CHANGELOG-UX.md](./CHANGELOG-UX.md)
 
 ---
 
@@ -50,6 +52,7 @@ lineaire-b/
 ├── src/__tests__/              → Vitest (data integrity, geo, tags)
 ├── .nvmrc                      → Node 20 (CI + local)
 ├── .github/workflows/ci.yml    → typecheck + lint + test + build
+├── CHANGELOG-UX.md             → visible UX changes (French)
 ├── index.html
 ├── vite.config.ts
 ├── tsconfig.json
@@ -81,7 +84,7 @@ Below **900px** width (phones / narrow viewports):
 - **Compare mode** stacks the map above the comparison panel (~42vh).
 - Map hints and zoom controls use **touch-friendly** copy and tap targets (pinch / drag).
 
-From **900px** upward, the layout matches the desktop experience: persistent sidebar, side detail panel, and wheel / click-drag hints.
+From **900px** upward: theme filter as a **map overlay** (collapsible side tab), **340px** side panels (detail, compare, podcast), and wheel / click-drag hints.
 
 ---
 
@@ -98,7 +101,7 @@ npm run dev
 
 ```bash
 npm run typecheck   # strict TypeScript
-npm run test        # Vitest — unit + integration (132 tests)
+npm run test        # Vitest — unit + integration (140 tests)
 npm run lint        # ESLint
 npm run build       # production build → dist/
 npm run build:analyze  # build + print dist asset sizes
@@ -170,9 +173,9 @@ Projection: Natural Earth (D3). Geometry is bundled from `world-atlas@2` (Natura
 
 ## Author
 
-**Chafik El Idrissi** — interactive map application
+**Chafik El Idrissi**
 
 - [GitHub](https://github.com/celidrissi)
 - [LinkedIn](https://www.linkedin.com/in/chafik-el-idrissi/)
 
-The editorial content of the _Linéaire B_ podcast belongs to its creators; this project is a fan companion map.
+The editorial content of the _Linéaire B_ podcast belongs to its creators; this project is a companion map.

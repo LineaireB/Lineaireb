@@ -1,6 +1,6 @@
 # Linéaire B — Changements visibles & corrections
 
-Récapitulatif des évolutions.
+Récapitulatif des évolutions UX (companion map du podcast _Linéaire B_).
 
 ---
 
@@ -9,6 +9,7 @@ Récapitulatif des évolutions.
 ### Carte & navigation
 
 - **Zoom** : boutons + / − plus grands et plus faciles à toucher (surtout sur mobile).
+- **Survol** : fond **opaque** sur + / − / globe (plus de barre transparente ou d’effet « inset » parasite).
 - **Vue monde** : le bouton « reset zoom » utilise une **icône globe** à la place du symbole ⌂ (plus clair).
 - **Indications carte** : texte d’aide zoom/navigation adapté mobile (2 lignes) et desktop (texte plus lisible).
 - **Tooltips des points** : cartes au survol / sélection mieux dimensionnées (textes longs ne débordent plus).
@@ -17,6 +18,7 @@ Récapitulatif des évolutions.
 
 ### Panneau de droite (fiche)
 
+- **Largeur desktop** : fiche civilisation, comparer et podcast alignés à **340 px** (`--panel-side-width`).
 - **Toujours visible sur desktop** : même sans sélection, le panneau affiche « Aucune sélection » avec un message d’aide contextuel.
 - **Messages d’aide** :
   - mode normal : « Sélectionne un thème ou clique sur un point de la carte »
@@ -25,10 +27,18 @@ Récapitulatif des évolutions.
 - **Animations** : ouverture _et_ fermeture animées du panneau (slide sur mobile, fondu sur desktop).
 - **Mobile** : la fiche reste une barre en bas ; le panneau vide reste masqué sur petit écran.
 
-### Header & sidebar
+### Filtre thèmes (desktop, ≥ 900 px)
+
+- Panneau **en overlay sur la carte** (ne réduit plus la zone carte).
+- **Onglet latéral** « Thèmes » (double chevron) pour ouvrir / fermer ; panneau **pleine hauteur** quand ouvert.
+- **Survol** : onglet avec fond opaque (cohérent avec les contrôles zoom).
+- Ouvert par défaut au premier chargement desktop ; état ouvert / fermé **conservé** entre les sessions de navigation.
+
+### Header & navigation des modes
 
 - **Mode Mystère** : bouton renommé (ex-« Brouillard »), placé à côté Explorer / Comparer sur desktop.
-- **Mobile** : bouton **☰ Thèmes** sous les modes, pleine largeur.
+- **Mobile** : bouton **☰ Thèmes** sous les modes, pleine largeur (tiroir plein écran, voir section Mobile).
+- **Header mobile** : hauteur **stable** entre Explorer et Comparer ; texte d’aide (hint) à **taille identique** dans les deux modes.
 
 ### Mode Mystère
 
@@ -43,12 +53,17 @@ Récapitulatif des évolutions.
 - **Toast de découverte** : animation d’**entrée et de sortie** (fondu + léger mouvement).
 - **Backdrop** (fond sombre mobile) : fondu à l’**ouverture et à la fermeture**, synchronisé avec la fermeture de la fiche.
 - **Fiche détail** : animation de fermeture alignée sur l’ouverture.
+- **Réduction des mouvements** : les animations respectent `prefers-reduced-motion` (accessibilité).
 
 ---
 
 ## Mode Comparer
 
-- **Header compare** : mise en page améliorée sur mobile (sélecteurs empilés si besoin).
+- **Filtre thèmes** : panneau masqué avec animation en mode Comparer ; **l’état ouvert / fermé est restauré** au retour en Explorer.
+- **Header compare** :
+  - mise en page améliorée sur mobile (sélecteurs empilés si besoin) ;
+  - listes **A / B** avec **chevron personnalisé** (alignement fiable, sans flèche native du navigateur).
+- **Panneau de droite** : même largeur **340 px** que la fiche Explorer sur desktop.
 - **Cas hybrides** :
   - libellé corrigé : « 1 **hybride** » / « N **hybrides** »
   - le compteur **● N hybride(s)** est **cliquable**
@@ -62,8 +77,8 @@ Récapitulatif des évolutions.
 
 ### Accès & contenu
 
-- **Header** : bouton **« Écouter le podcast »** ouvre un panneau dédié (même logique d’animation que la fiche détail : bottom sheet mobile, panneau latéral desktop).
-- **Contenu** : kicker « Podcast », titre LinéaireB, tagline, description longue, section **« Écouter sur »** avec liens externes.
+- **Header** : bouton **« Écouter le podcast »** ouvre un panneau dédié (même logique d’animation que la fiche détail : bottom sheet mobile, panneau latéral desktop **340 px**).
+- **Contenu** : kicker « Podcast », titre _Linéaire B_, tagline, description longue, section **« Écouter sur »** avec liens externes.
 
 ### Liens plateformes
 
@@ -81,7 +96,7 @@ Récapitulatif des évolutions.
 
 ## Mobile (global)
 
-- Hauteur viewport corrigée (`100dvh`) — moins de contenu coupé.
+- Hauteur viewport corrigée (`100dvh` / `100svh`, safe-area) — moins de contenu coupé, y compris le **tiroir ☰ Thèmes** sur iPhone.
 - Titre header qui ne se casse plus.
 - Contrôles zoom repositionnés (plus de boutons rognés).
 - Bottom sheet fiche : n’apparaît plus en style mobile sur **desktop**.
@@ -96,14 +111,15 @@ Récapitulatif des évolutions.
 | Autres points par-dessus les tooltips             | Calque tooltips séparé au-dessus des marqueurs |
 | Toast qui restait en mode Comparer (clic hybride) | Toast fermée à la sélection d’un hybride       |
 | Symbole ⌂ peu lisible pour « vue monde »          | Icône globe + libellé accessible               |
+| Panneau comparer plus étroit que la fiche         | Largeur unifiée 340 px                         |
 
 ---
 
 ## Technique (sans impact direct utilisateur)
 
-- Refactor du code (features, tests, CI GitHub Actions).
-- TypeScript strict, alias `@/`, lint & tests de données.
-- README et structure projet documentés en anglais.
+- Refactor TypeScript (features, hooks, `lib/`), **140** tests Vitest, CI GitHub Actions (typecheck, lint, test, build).
+- CSS découpé en modules (`src/styles/layout/*`), tokens sur `.app-shell`, alias `@/`.
+- README et structure projet documentés en anglais ; ce fichier recense l’UX en français.
 
 ---
 

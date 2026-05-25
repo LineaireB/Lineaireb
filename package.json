@@ -2,8 +2,11 @@
   "name": "lineaire-b",
   "version": "1.0.0",
   "private": true,
-  "author": "Chafik El Idrissi (https://github.com/celidrissi)",
-  "contributors": ["Benjamin Defert"],
+  "author": "Chafik El Idrissi (https://about.me/chafik.elidrissi)",
+  "contributors": [
+    "Corréos",
+    "LinéaireB"
+  ],
   "scripts": {
     "dev": "vite --host",
     "build": "tsc --noEmit && vite build",
